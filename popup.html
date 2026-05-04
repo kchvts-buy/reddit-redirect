@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --text: #202124;
+      --muted: #5f6368;
+      --border: #dadce0;
+      --border-strong: #c7cacf;
+      --primary: #0b57d0;
+      --on-primary: #ffffff;
+      --outline: #747775;
+      --surface-container-highest: #e3e3e3;
+      --control-bg: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #202124;
+        --surface: #292a2d;
+        --text: #e8eaed;
+        --muted: #bdc1c6;
+        --border: #3c4043;
+        --border-strong: #5f6368;
+        --primary: #a8c7fa;
+        --on-primary: #062e6f;
+        --outline: #c4c7c5;
+        --surface-container-highest: #444746;
+        --control-bg: #202124;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 100%;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 20px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 16px;
+      margin-top: 1px;
+    }
+    .content { padding: 12px 16px 16px; }
+    .section {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-child { border-bottom: 0; padding-bottom: 0; }
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      margin-bottom: 8px;
+    }
+    .sort-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .sort-option, .apply-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 36px;
+      background: var(--control-bg);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .sort-option:hover, .apply-option:hover { background: var(--surface-container-highest); }
+    .sort-option.selected, .apply-option.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--on-primary);
+    }
+    .sort-option:focus-visible, .apply-option:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .sort-option svg, .apply-option svg {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 auto;
+      fill: currentColor;
+    }
+    .sort-option.wide, .apply-option.wide { grid-column: 1 / -1; }
+    select {
+      width: 100%;
+      min-height: 36px;
+      background: var(--control-bg);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      padding: 6px 44px 6px 12px;
+      border-radius: 4px;
+      outline: none;
+      font: inherit;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+    .select-wrap {
+      position: relative;
+    }
+    .select-wrap::after {
+      content: "";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      pointer-events: none;
+      border-right: 2px solid var(--text);
+      border-bottom: 2px solid var(--text);
+      transform: translateY(-65%) rotate(45deg);
+    }
+    .hidden { display: none; }
+    input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+    .switch {
+      position: relative;
+      width: 44px;
+      height: 26px;
+      --switch-border: 2px;
+      --switch-thumb-off: 14px;
+      --switch-thumb-on: 20px;
+      flex: 0 0 auto;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      background: var(--surface-container-highest);
+      border: var(--switch-border) solid var(--outline);
+      border-radius: 999px;
+      transition: background 120ms ease, border-color 120ms ease;
+    }
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: var(--switch-thumb-off);
+      height: var(--switch-thumb-off);
+      left: 6px;
+      top: calc((100% - var(--switch-thumb-off)) / 2);
+      background: var(--outline);
+      border-radius: 50%;
+      transition: transform 120ms ease, width 120ms ease, height 120ms ease, background 120ms ease;
+    }
+    .switch:hover .slider { filter: brightness(0.96); }
+    .switch input:checked + .slider {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .switch input:checked + .slider::before {
+      width: var(--switch-thumb-on);
+      height: var(--switch-thumb-on);
+      top: calc((100% - var(--switch-thumb-on)) / 2);
+      background: var(--on-primary);
+      transform: translateX(14px);
+    }
+    .switch input:focus-visible + .slider {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Default Sort for Reddit</h1>
+      <div class="subtitle">Default redirects only</div>
+    </div>
+    <label class="switch" title="Enable extension">
+      <input type="checkbox" id="status" aria-label="Enable extension">
+      <span class="slider"></span>
+    </label>
+  </header>
+  <div class="content">
+    <div class="section">
+      <div class="label">Default sort</div>
+      <div class="sort-grid" role="group" aria-label="Default sort">
+        <button class="sort-option wide" type="button" data-sort="top/" aria-pressed="false">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M160-200h160v-320H160v320Zm240 0h160v-560H400v560Zm240 0h160v-240H640v240ZM80-120v-480h240v-240h320v320h240v400H80Z"/></svg>
+          <span>Top</span>
+        </button>
+        <button class="sort-option" type="button" data-sort="new/" aria-pressed="false">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M582-298 440-440v-200h80v167l118 118-56 57ZM440-720v-80h80v80h-80Zm280 280v-80h80v80h-80ZM440-160v-80h80v80h-80ZM160-440v-80h80v80h-80ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+          <span>New</span>
+        </button>
+        <button class="sort-option" type="button" data-sort="hot/" aria-pressed="false">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M240-400q0 52 21 98.5t60 81.5q-1-5-1-9v-9q0-32 12-60t35-51l113-111 113 111q23 23 35 51t12 60v9q0 4-1 9 39-35 60-81.5t21-98.5q0-50-18.5-94.5T648-574q-20 13-42 19.5t-45 6.5q-62 0-107.5-41T401-690q-39 33-69 68.5t-50.5 72Q261-513 250.5-475T240-400Zm240 52-57 56q-11 11-17 25t-6 29q0 32 23.5 55t56.5 23q33 0 56.5-23t23.5-55q0-16-6-29.5T537-292l-57-56Zm0-492v132q0 34 23.5 57t57.5 23q18 0 33.5-7.5T622-658l18-22q74 42 117 117t43 163q0 134-93 227T480-80q-134 0-227-93t-93-227q0-129 86.5-245T480-840Z"/></svg>
+          <span>Hot</span>
+        </button>
+        <button class="sort-option" type="button" data-sort="best/" aria-pressed="false">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="m713-280 127-297v-23H588l19-134-55 55q-8-8-28-28.5T496-736l144-144 32 32q14 14 19.5 31.5T694-780l-14 100h160q33 0 56.5 23.5T920-600v23q0 8-1.5 16t-4.5 16l-93 216q-10 22-30 35.5T747-280h-34ZM240-120H40v-400h200v80H120v240h120v80Zm267 0H160v-360l240-240 32 32q14 14 19.5 31.5T454-620l-14 100h160q33 0 56.5 23.5T680-440v24q0 8-1.5 15.5T674-385l-93 217q-10 22-30 35t-44 13Zm0-80 93-216v-24H348l19-134-127 127v247h267Zm-267 0v-247 247Z"/></svg>
+          <span>Best</span>
+        </button>
+        <button class="sort-option" type="button" data-sort="rising/" aria-pressed="false">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="m136-240-56-56 296-298 160 160 208-206H640v-80h240v240h-80v-104L536-320 376-480 136-240Z"/></svg>
+          <span>Rising</span>
+        </button>
+      </div>
+    </div>
+    <div id="timeSection" class="section hidden">
+      <div class="label">Top posts range</div>
+      <div class="select-wrap">
+        <select id="timeRange">
+          <option value="hour">Hour</option>
+          <option value="day">Day</option>
+          <option value="week">Week</option>
+          <option value="month">Month</option>
+          <option value="year">Year</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+    </div>
+    <div class="section">
+      <div class="label">Default sort applies to</div>
+      <div class="sort-grid" role="group" aria-label="Apply to">
+        <button class="apply-option" type="button" id="applySubreddits" aria-pressed="false">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="m160-419 101-101-101-101L59-520l101 101Zm540-21 100-160 100 160H700Zm-220-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Zm0-160q-17 0-28.5 11.5T440-600q0 17 11.5 28.5T480-560q17 0 28.5-11.5T520-600q0-17-11.5-28.5T480-640Zm0 40ZM0-240v-63q0-44 44.5-70.5T160-400q13 0 25 .5t23 2.5q-14 20-21 43t-7 49v65H0Zm240 0v-65q0-65 66.5-105T480-450q108 0 174 40t66 105v65H240Zm560-160q72 0 116 26.5t44 70.5v63H780v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5Zm-320 30q-57 0-102 15t-53 35h311q-9-20-53.5-35T480-370Zm0 50Z"/></svg>
+          <span>Subreddits</span>
+        </button>
+        <button class="apply-option" type="button" id="applyUser" aria-pressed="false">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM480-640Zm0 400Z"/></svg>
+          <span>User profiles</span>
+        </button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="label">Feed view</div>
+      <div class="sort-grid" role="group" aria-label="Feed view">
+        <button class="apply-option" type="button" data-feed-view="cardView" aria-pressed="false">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.3 2h11.4C17.52 2 19 3.48 19 5.3v9.4c0 1.82-1.48 3.3-3.3 3.3H4.3C2.48 18 1 16.52 1 14.7V5.3C1 3.48 2.48 2 4.3 2Zm0 2C3.58 4 3 4.58 3 5.3v9.4c0 .72.58 1.3 1.3 1.3h11.4c.72 0 1.3-.58 1.3-1.3V5.3c0-.72-.58-1.3-1.3-1.3H4.3Zm1.2 2h9v5h-9V6Zm0 7h6.5v1.5H5.5V13Z"/></svg>
+          <span>Card</span>
+        </button>
+        <button class="apply-option" type="button" data-feed-view="compactView" aria-pressed="false">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.3 2h11.4C17.52 2 19 3.48 19 5.3v9.4c0 1.82-1.48 3.3-3.3 3.3H4.3C2.48 18 1 16.52 1 14.7V5.3C1 3.48 2.48 2 4.3 2Zm0 2C3.58 4 3 4.58 3 5.3v9.4c0 .72.58 1.3 1.3 1.3h11.4c.72 0 1.3-.58 1.3-1.3V5.3c0-.72-.58-1.3-1.3-1.3H4.3Zm1.2 2h9v1.6h-9V6Zm0 3.2h9v1.6h-9V9.2Zm0 3.2h9V14h-9v-1.6Z"/></svg>
+          <span>Compact</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
