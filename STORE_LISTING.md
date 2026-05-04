@@ -14,7 +14,7 @@ Default Sort for Reddit keeps Reddit community and profile pages on the sort and
 
 Choose a default sort for communities, choose supported sorting for user profiles, and select Card or Compact feed view. The extension applies those choices only when opening plain Reddit community or profile URLs.
 
-If you manually change sorting through Reddit's own interface, the extension does not force the page back to your saved default.
+If you manually change sorting through Reddit's own interface, the extension does not force the page back to your saved default. It does not continuously monitor or rewrite Reddit query parameters.
 
 Features:
 
@@ -38,11 +38,11 @@ English
 
 ## Single Purpose
 
-Apply the user's selected default Reddit sort and feed view to Reddit community and user profile URLs.
+Apply the user's selected default Reddit sort and feed view to plain Reddit community and user profile URLs without overriding manual filter changes made in Reddit's interface.
 
 ## Permission Justifications
 
-`declarativeNetRequest`: Required to redirect matching Reddit community and profile URLs to the selected default sort and feed view.
+`declarativeNetRequest`: Required to redirect matching plain Reddit community and profile URLs to the selected default sort and feed view. The rules do not match already sorted URLs, so manual Reddit filter changes are not overridden.
 
 `storage`: Required to store extension settings locally in Chrome.
 
@@ -50,7 +50,7 @@ Apply the user's selected default Reddit sort and feed view to Reddit community 
 
 `contextMenus`: Required to provide an enable/disable item in the extension toolbar context menu.
 
-Host permissions for `https://reddit.com/*` and `https://*.reddit.com/*`: Required so redirect rules can apply only to Reddit URLs.
+Host permissions for `https://reddit.com/*` and `https://*.reddit.com/*`: Required so redirect rules can apply only to Reddit URLs. The extension does not use these permissions to read page content or continuously monitor URL parameters.
 
 ## Privacy Practices
 

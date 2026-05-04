@@ -23,7 +23,7 @@ https://www.reddit.com/r/example/
 https://www.reddit.com/user/example/
 ```
 
-The rules do not match already sorted URLs, so Reddit interface clicks such as `Hot`, `New`, `Top`, or `Rising` are not forced back to the extension setting.
+The rules do not match already sorted URLs and do not continuously watch or rewrite query parameters. Reddit interface clicks such as `Hot`, `New`, `Top`, or `Rising` are not forced back to the extension setting.
 
 ## Permissions
 
